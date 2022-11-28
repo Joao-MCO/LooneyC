@@ -4,7 +4,7 @@
     #include
 %}
 
-$$
+%%
 "qqhavelinho"       {return INICIOMAIN;}
 "issoetudopessoal"  {return ENDMAIN;}
 "/f"                {return FIMLINHA;}
