@@ -12,8 +12,8 @@
 	extern "C" int yyparse();
 	extern "C" FILE *yyin;
 	void yyerror(const char *s);
-	void cbr_para_c(tipo *raiz);
-	void sub_cbr_para_c(tipo *raiz);
+	void loc_para_c(tipo *raiz);
+	void sub_loc_para_c(tipo *raiz);
 	FILE *entrada, *saida;
 	tipo *raiz;
 	char *var_nome;   
@@ -76,7 +76,6 @@
 
 %%
 
-/*---------------------Estrutura do programa---------------------*/
 
 programa: INICIOMAIN listaDeEventos ENDMAIN
 { 
@@ -100,7 +99,6 @@ chamaFn: '{'listaDeEventos'}'
 	$$ = $2; 
 } 
 
-/*---------------------Tipos basicos---------------------*/
 
 numero: V_INT
 { 
@@ -146,7 +144,6 @@ string: letra string
 |letra
 ;
 
-/*---------------------Operações---------------------*/
 
 atribuicao: numero string '=' expressao
 {
@@ -256,7 +253,6 @@ expressao:   string
 }
 
 
-/*---------------------Operações Lógicas---------------------*/
 condicao: igual
 | maior
 | menor
@@ -399,7 +395,6 @@ maiorIgual: expressao OP_GE expressao
 	$$->prox2 = $7;
 }
 
-/*---------------------Comandos---------------------*/
 
 comando:  atribuicao
 | chamaFn
@@ -487,7 +482,6 @@ comandoLoop: LOOP '(' condicao ')' chamaFn
 	$$->dir = NULL;
 }
 
-/*---------------------Conversor CBr para C---------------------*/
 
 %%
 int main(int argc, char *argv[])
@@ -517,7 +511,7 @@ int main(int argc, char *argv[])
   fprintf(saida,"#include<stdio.h>\n");
   fprintf(saida,"#include<math.h>\n");	
   fprintf(saida,"\nint main(int argc, char *argv[]){\n");
-  cbr_para_c(raiz);
+  loc_para_c(raiz);
   fprintf(saida,"\nreturn 0;\n");
   fprintf(saida,"\n}\n");
   fclose(entrada);
@@ -528,9 +522,9 @@ void yyerror(const char *s) {
   printf("%s\n", s);
 }
 
-/*---------------------Funções para conversão de CBr para C---------------------*/
 
-void cbr_para_c(tipo *raiz){
+
+void loc_para_c(tipo *raiz){
 	if (raiz != NULL){
 	switch(raiz->token){
 		case NUM:
@@ -550,189 +544,189 @@ void cbr_para_c(tipo *raiz){
 			break;
 		case '=':
 			if(raiz->prox3==NULL){
-				cbr_para_c(raiz->prox2);
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->prox2);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"= ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				fprintf(saida,";\n");
 				break;
 			}else{
-				cbr_para_c(raiz->prox2);
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->prox2);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"= ");
 				fprintf(saida," '");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				fprintf(saida,"' ");
 				fprintf(saida,";\n");
 				break;
 			}
 		case ';':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida," ");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			fprintf(saida,";\n");
 			break;
 		case '+':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"+");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 		case '-':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"-");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 		case '*':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"*");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 		case '/':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"/");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 		case '%':
 			fprintf(saida,"int(");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,")");
 			fprintf(saida,"%%");
 			fprintf(saida,"int(");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			fprintf(saida,")");
 			break;
 		case ',':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,",");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 
 		case OP_EQ:
 		if(raiz->prox1==NULL){
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"== ");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			break;
 		}else{
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"== ");
-			cbr_para_c(raiz->dir);
-			cbr_para_c(raiz->prox1);
+			loc_para_c(raiz->dir);
+			loc_para_c(raiz->prox1);
 			fprintf(saida,"(");
-			cbr_para_c(raiz->prox2);
+			loc_para_c(raiz->prox2);
 			fprintf(saida,")");
 			break;
 		}
 		case OP_NE:
 			if(raiz->prox1==NULL){
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"!= ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"!= ");
-				cbr_para_c(raiz->dir);
-				cbr_para_c(raiz->prox1);
+				loc_para_c(raiz->dir);
+				loc_para_c(raiz->prox1);
 				fprintf(saida,"(");
-				cbr_para_c(raiz->prox2);
+				loc_para_c(raiz->prox2);
 				fprintf(saida,")");
 				break;
 			}
 		
 		case OP_GT:
 			if(raiz->prox1==NULL){
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"> ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"> ");
-				cbr_para_c(raiz->dir);
-				cbr_para_c(raiz->prox1);
+				loc_para_c(raiz->dir);
+				loc_para_c(raiz->prox1);
 				fprintf(saida,"(");
-				cbr_para_c(raiz->prox2);
+				loc_para_c(raiz->prox2);
 				fprintf(saida,")");
 				break;
 			}
 		case OP_LT:
 			if(raiz->prox1==NULL){
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"< ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"< ");
-				cbr_para_c(raiz->dir);
-				cbr_para_c(raiz->prox1);
+				loc_para_c(raiz->dir);
+				loc_para_c(raiz->prox1);
 				fprintf(saida,"(");
-				cbr_para_c(raiz->prox2);
+				loc_para_c(raiz->prox2);
 				fprintf(saida,")");
 				break;
 			}
 
 		case OP_GE:
 			if(raiz->prox1==NULL){
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,">= ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,">= ");
-				cbr_para_c(raiz->dir);
-				cbr_para_c(raiz->prox1);
+				loc_para_c(raiz->dir);
+				loc_para_c(raiz->prox1);
 				fprintf(saida,"(");
-				cbr_para_c(raiz->prox2);
+				loc_para_c(raiz->prox2);
 				fprintf(saida,")");
 				break;
 			}
 		case OP_LE:
 			if(raiz->prox1==NULL){
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"<= ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"<= ");
-				cbr_para_c(raiz->dir);
-				cbr_para_c(raiz->prox1);
+				loc_para_c(raiz->dir);
+				loc_para_c(raiz->prox1);
 				fprintf(saida,"(");
-				cbr_para_c(raiz->prox2);
+				loc_para_c(raiz->prox2);
 				fprintf(saida,")");
 				break;
 			}
 		case EVENT:
-			cbr_para_c(raiz->prox1);
+			loc_para_c(raiz->prox1);
 			fprintf(saida,"(");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,")");
 			fprintf(saida,";\n");
 			break;
 
 		case '.':
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida," ");
-			cbr_para_c(raiz->dir);
+			loc_para_c(raiz->dir);
 			fprintf(saida," ");
 			break;
 		
 		case OP_IF:
 			fprintf(saida," \nif ");
 			fprintf(saida,"(");
-			cbr_para_c(raiz->prox1);
+			loc_para_c(raiz->prox1);
 			fprintf(saida,")");
 			fprintf(saida," {\n");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,"\n}");
 		
 			if(raiz->dir != NULL){
 				fprintf(saida,"\n else");
 				fprintf(saida," {\n");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				fprintf(saida," }\n");
 			}
 			else fprintf(saida,"\n");
@@ -741,10 +735,10 @@ void cbr_para_c(tipo *raiz){
 		case LOOP:
 			fprintf(saida," \nwhile ");
 			fprintf(saida,"(");
-			cbr_para_c(raiz->prox1);
+			loc_para_c(raiz->prox1);
 			fprintf(saida,")");
 			fprintf(saida," {\n");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida," }");
 			break;
 
@@ -760,7 +754,7 @@ void cbr_para_c(tipo *raiz){
 		case OP_NOT:
 			fprintf(saida,"!");
 			fprintf(saida,"(");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,")");
 			break;
 
@@ -772,7 +766,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,"\"");
 			fprintf(saida,",");
 			fprintf(saida,"&");
-			cbr_para_c(raiz->esq);
+			loc_para_c(raiz->esq);
 			fprintf(saida,")");
 			fprintf(saida,"; ");
 			fprintf(saida,"\n");
@@ -785,7 +779,7 @@ void cbr_para_c(tipo *raiz){
 				fprintf(saida," \n printf");
 				fprintf(saida,"(");
 				fprintf(saida,"\"");
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"\"");
 				fprintf(saida,")");
 				fprintf(saida,"; ");
@@ -796,13 +790,13 @@ void cbr_para_c(tipo *raiz){
 				fprintf(saida," \n printf");
 				fprintf(saida,"(");
 				fprintf(saida,"\"");
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->esq);
 				fprintf(saida," ");
 				if(raiz->dir->token== V_INT){
 					fprintf(saida,"%%d");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
-					cbr_para_c(raiz->prox1);
+					loc_para_c(raiz->prox1);
 					fprintf(saida,")");
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
@@ -811,7 +805,7 @@ void cbr_para_c(tipo *raiz){
 					fprintf(saida,"%%e");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
-					cbr_para_c(raiz->prox1);
+					loc_para_c(raiz->prox1);
 					fprintf(saida,")");
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
@@ -820,7 +814,7 @@ void cbr_para_c(tipo *raiz){
 					fprintf(saida,"%%c");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
-					cbr_para_c(raiz->prox1);
+					loc_para_c(raiz->prox1);
 					fprintf(saida,")");
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
@@ -829,7 +823,7 @@ void cbr_para_c(tipo *raiz){
 					fprintf(saida,"%%d");       
 					fprintf(saida,"\"");
 					fprintf(saida,",");
-					cbr_para_c(raiz->prox1);
+					loc_para_c(raiz->prox1);
 					fprintf(saida,")");
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
@@ -840,27 +834,27 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,"Desconhecido: Token = %d (%c) \n", raiz->token, raiz->token);
 	}
 		if (raiz->prox != NULL) {
-		cbr_para_c(raiz->prox);
+		loc_para_c(raiz->prox);
 	}
   }
 }
 
-void sub_cbr_para_c(tipo *raiz){
+void sub_loc_para_c(tipo *raiz){
 	if (raiz != NULL){
 	switch(raiz->token){
 		case '=':
 			if(raiz->prox3==NULL){
-				cbr_para_c(raiz->prox2);
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->prox2);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"= ");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				break;
 			}else{
-				cbr_para_c(raiz->prox2);
-				cbr_para_c(raiz->esq);
+				loc_para_c(raiz->prox2);
+				loc_para_c(raiz->esq);
 				fprintf(saida,"= ");
 				fprintf(saida," '");
-				cbr_para_c(raiz->dir);
+				loc_para_c(raiz->dir);
 				fprintf(saida,"' ");
 				break;
 			}
@@ -868,7 +862,7 @@ void sub_cbr_para_c(tipo *raiz){
 			fprintf(saida,"Desconhecido: Token = %d (%c) \n", raiz->token, raiz->token);
 	}
 		if (raiz->prox != NULL) {
-		cbr_para_c(raiz->prox);
+		loc_para_c(raiz->prox);
 	}
   }
 }
