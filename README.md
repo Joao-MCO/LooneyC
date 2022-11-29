@@ -17,7 +17,7 @@ flex lexer.l
 #compila o lexer e o parser pelo compilador C
 g++ parser.tab.c lex.yy.c -o LooneyCompiler
 #Roda o teste
-LooneyCompiler teste.cbr
-g++ teste.cbr.cc -o saida_teste
+LooneyCompiler teste.loc
+g++ teste.loc.cc -o saida_teste
 saida_teste
 ```
