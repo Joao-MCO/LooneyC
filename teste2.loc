@@ -1,0 +1,11 @@
+qqhavelinho
+	inteiro a;
+	toonOut("Digite um valor");
+	toonIn(a);
+	sesese(a>=5){
+		toonOut("Maior que 5");
+	}
+	sesenananao{
+		toonOut("Menor que 5");
+	}
+issoehtudopessoal
