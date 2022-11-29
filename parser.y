@@ -9,7 +9,7 @@
 	using namespace std;
 	#define YYERROR_VERBOSE
 	extern "C" int yylex();
-	extern "C" int yyparse();
+	extern "C" i21:03 28/11/2022nt yyparse();
 	extern "C" FILE *yyin;
 	void yyerror(const char *s);
 	void cbr_para_c(tipo *raiz);
@@ -23,52 +23,64 @@
 	tipo *pnt;
 }
 
-%token <pnt> FOR 		
-%token <pnt> WHILE 		
-%token <pnt> IF 		
-%token <pnt> ELSE 		
-%token <pnt> PRINTF		
-%token <pnt> SCANFINT 		
-%token <pnt> SCANFDOUBLE	
-%token <pnt> SCANFCHAR 		
+%token <pnt> LOOP		
+%token <pnt> OP_IF 		
+%token <pnt> OP_ELSE 		
+%token <pnt> OUT	
+%token <pnt> IN 
+%token <pnt> VAR 
+	
+
 %token <pnt> NUM 		
-%token <pnt> ID			
-%token <pnt> EVENT 		
+%token <pnt> EVENT 
+		
+%token <pnt> OP_RELA
 %token <pnt> LE			
 %token <pnt> GE			
 %token <pnt> EQ			
 %token <pnt> NE			
 %token <pnt> LT			
-%token <pnt> GT			
-%token <pnt> INT		
-%token <pnt> DOUBLE		
-%token <pnt> CHAR		
+%token <pnt> GT	
+		
 %token <pnt> AND		
 %token <pnt> OR			
-%token <pnt> NOT		
-%token <pnt> START		
-%token <pnt> END		
+%token <pnt> NOT
+
+%token <pnt> ATRIB
+%token <pnt> LOOP
+
+%token <pnt> V_INT		
+%token <pnt> V_REAL		
+%token <pnt> V_CHAR
+	
+%token <pnt> INICIOMAIN		
+%token <pnt> ENDMAIN		
 %token <pnt> PRINTLN 	
+
 %type <pnt> programa
 %type <pnt> listaDeEventos
 %type <pnt> chamaFn
 %type <pnt> letra
 %type <pnt> numero
+
 %type <pnt> atribuicao
+
 %type <pnt> expressao
 %type <pnt> comando
 %type <pnt> condicao
 %type <pnt> diferente
+
 %type <pnt> igual
 %type <pnt> menor
 %type <pnt> maior
 %type <pnt> menorIgual
 %type <pnt> maiorIgual
+
 %type <pnt> comandoSe
 %type <pnt> comandoImprimir
 %type <pnt> comandoRecebe
-%type <pnt> comandoEnquanto
-%type <pnt> comandoPara
+%type <pnt> comandoLoop
+
 %type <pnt> operadorLogico
 %type <pnt> negacao
 %type <pnt> caractere
@@ -81,7 +93,7 @@
 
 /*---------------------Estrutura do programa---------------------*/
 
-programa: START listaDeEventos END
+programa: INICIOMAIN listaDeEventos ENDMAIN
 { 
 	raiz = $2; 
 } 
@@ -105,36 +117,36 @@ chamaFn: '{'listaDeEventos'}'
 
 /*---------------------Tipos basicos---------------------*/
 
-numero: INT
+numero: V_INT
 { 
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = INT;
+	$$->token = V_INT;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
 	$$->dir = NULL;
 }
-|DOUBLE
+|V_REAL
 { 
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = DOUBLE;
-	strcpy($$->nome, yylval.pnt->nome);
-	$$->esq = NULL;
-	$$->dir = NULL;
-}
-
-caractere: CHAR
-{ 
-	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = CHAR;
+	$$->token = V_REAL;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
 	$$->dir = NULL;
 }
 
-letra: ID       
+caractere: V_CHAR
 { 
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = ID;
+	$$->token = V_CHAR;
+	strcpy($$->nome, yylval.pnt->nome);
+	$$->esq = NULL;
+	$$->dir = NULL;
+}
+
+letra: VAR       
+{ 
+	$$ = (tipo*)malloc(sizeof(tipo));
+	$$->token = VAR;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
 	$$->dir = NULL;
@@ -407,7 +419,7 @@ maiorIgual: expressao GE expressao
 
 comando:  atribuicao
 | chamaFn
-| comandoEnquanto
+| comandoLoop
 | comandoPara
 | comandoSe
 | comandoImprimir
@@ -415,58 +427,58 @@ comando:  atribuicao
 | comandoPulaLinha
 ;
 
-comandoSe:  IF '(' condicao ')' chamaFn
+comandoSe:  OP_IF '(' condicao ')' chamaFn
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = IF;
+	$$->token = OP_IF;
 	$$->prox1 = $3;
 	$$->esq = $5;
 	$$->dir = NULL;
 }
-|IF '(' negacao ')' chamaFn
+|OP_IF '(' negacao ')' chamaFn
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = IF;
+	$$->token = OP_IF;
 	$$->prox1 = $3;
 	$$->esq = $5;
 	$$->dir = NULL;
 }
-| IF '(' condicao ')' chamaFn ELSE chamaFn
+| OP_IF '(' condicao ')' chamaFn OP_ELSE chamaFn
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = IF;
+	$$->token = OP_IF;
 	$$->prox1 = $3;
 	$$->esq = $5;
 	$$->dir = $7;
 }
-| IF '(' negacao ')' chamaFn ELSE chamaFn
+| OP_IF '(' negacao ')' chamaFn OP_ELSE chamaFn
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = IF;
+	$$->token = OP_IF;
 	$$->prox1 = $3;
 	$$->esq = $5;
 	$$->dir = $7;
 }
 
-comandoImprimir: PRINTF '('  string  ')'
+comandoImprimir: OUT '('  string  ')'
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = PRINTF; 
+	$$->token = OUT; 
 	$$->esq = $3;
 	$$->dir = NULL;
 }
-|PRINTF '('string '+' numero string ')'
+|OUT '('string '+' numero string ')'
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = PRINTF; 
+	$$->token = OUT; 
 	$$->esq = $3;
 	$$->dir = $5;
 	$$->prox1 = $6;
 }
-|PRINTF '('string '+' caractere string ')'
+|OUT '('string '+' caractere string ')'
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = PRINTF; 
+	$$->token = OUT; 
 	$$->esq = $3;
 	$$->dir = $5;
 	$$->prox1 = $6;
@@ -480,43 +492,20 @@ comandoPulaLinha: PRINTLN
 	$$->dir = NULL;
 }
 
-comandoRecebe: SCANFINT '('string')'
+comandoRecebe: IN '('string')'
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = SCANFINT; 
-	$$->esq = $3;
-	$$->dir = NULL;
-}
-|SCANFDOUBLE '(' string  ')'
-{
-	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = SCANFDOUBLE; 
-	$$->esq = $3;
-	$$->dir = NULL;
-}
-|SCANFCHAR '(' string  ')'
-{
-	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = SCANFCHAR; 
+	$$->token = IN; 
 	$$->esq = $3;
 	$$->dir = NULL;
 }
 
-comandoPara: FOR '('atribuicao':'condicao':'atribuicao')' chamaFn
-{
-	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = FOR;
-	$$->prox1 = $3;
-	$$->prox2 = $5;
-	$$->prox3 = $7;
-	$$->esq = $9;
-	$$->dir = NULL;
-}
 
-comandoEnquanto: WHILE '(' condicao ')' chamaFn
+
+comandoLoop: LOOP '(' condicao ')' chamaFn
 {
 	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = WHILE;
+	$$->token = LOOP;
 	$$->prox1 = $3;
 	$$->esq = $5;
 	$$->dir = NULL;
@@ -571,16 +560,16 @@ void cbr_para_c(tipo *raiz){
 		case NUM:
 			fprintf(saida,"%g", raiz->val);
 			break;
-		case ID:
+		case VAR:
 			fprintf(saida,"%s ", raiz->nome);
 			break;
-		case INT:
+		case V_INT:
 			fprintf(saida,"int ");
 			break;
-		case DOUBLE:
+		case V_REAL:
 			fprintf(saida,"double ");
 			break;
-		case CHAR:
+		case V_CHAR:
 			fprintf(saida,"char ");
 			break;
 		case '=':
@@ -755,7 +744,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida," ");
 			break;
 		
-		case IF:
+		case OP_IF:
 			fprintf(saida," \nif ");
 			fprintf(saida,"(");
 			cbr_para_c(raiz->prox1);
@@ -773,7 +762,7 @@ void cbr_para_c(tipo *raiz){
 			else fprintf(saida,"\n");
 			break;
       
-		case WHILE:
+		case LOOP:
 			fprintf(saida," \nwhile ");
 			fprintf(saida,"(");
 			cbr_para_c(raiz->prox1);
@@ -783,19 +772,6 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida," }");
 			break;
 
-		case FOR:
-			fprintf(saida,"\n for");
-			fprintf(saida,"(");
-			sub_cbr_para_c(raiz->prox1);
-			fprintf(saida,"; ");
-			cbr_para_c(raiz->prox2);
-			fprintf(saida,"; ");
-			sub_cbr_para_c(raiz->prox3);
-			fprintf(saida,")");
-			fprintf(saida,"{\n");
-			cbr_para_c(raiz->esq);
-			fprintf(saida,"\n} \n");
-			break;
 
 		case AND:
 			fprintf(saida,"&&");
@@ -812,7 +788,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,")");
 			break;
 
-		case SCANFINT:
+		case IN:
 			fprintf(saida," \n scanf");
 			fprintf(saida,"(");
 			fprintf(saida,"\"");
@@ -826,33 +802,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,"\n");
 			break;
 
-		case SCANFCHAR:
-			fprintf(saida," \n scanf");
-			fprintf(saida,"(");
-			fprintf(saida,"\"");
-			fprintf(saida,"%%c");
-			fprintf(saida,"\"");
-			fprintf(saida,",");
-			fprintf(saida,"&");
-			cbr_para_c(raiz->esq);
-			fprintf(saida,")");
-			fprintf(saida,"; ");
-			fprintf(saida,"\n");
-			break;
 
-		case SCANFDOUBLE:
-			fprintf(saida," \n scanf");
-			fprintf(saida,"(");
-			fprintf(saida,"\"");
-			fprintf(saida,"%%e");
-			fprintf(saida,"\"");
-			fprintf(saida,",");
-			fprintf(saida,"&");
-			cbr_para_c(raiz->esq);
-			fprintf(saida,")");
-			fprintf(saida,"; ");
-			fprintf(saida,"\n");
-			break;
 		case PRINTLN:
 			fprintf(saida," \n printf");
 			fprintf(saida,"(");
@@ -864,7 +814,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,"\n");
 			break;	
 
-		case PRINTF:
+		case OUT:
 			if(raiz->dir==NULL){
 				fprintf(saida," \n printf");
 				fprintf(saida,"(");
@@ -882,7 +832,7 @@ void cbr_para_c(tipo *raiz){
 				fprintf(saida,"\"");
 				cbr_para_c(raiz->esq);
 				fprintf(saida," ");
-				if(raiz->dir->token== INT){
+				if(raiz->dir->token== V_INT){
 					fprintf(saida,"%%d");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
@@ -891,7 +841,7 @@ void cbr_para_c(tipo *raiz){
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
 					break;
-				}else if (raiz->dir->token== DOUBLE){
+				}else if (raiz->dir->token== V_REAL){
 					fprintf(saida,"%%e");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
@@ -900,7 +850,7 @@ void cbr_para_c(tipo *raiz){
 					fprintf(saida,"; ");
 					fprintf(saida,"\n");
 					break;
-				}else if (raiz->dir->token== CHAR){
+				}else if (raiz->dir->token== V_CHAR){
 					fprintf(saida,"%%c");        
 					fprintf(saida,"\"");
 					fprintf(saida,",");
