@@ -46,7 +46,7 @@
 %token <pnt> V_CHAR
 %token <pnt> INICIOMAIN		
 %token <pnt> ENDMAIN		
-%token <pnt> PRINTLN 	
+	
 
 %type <pnt> programa
 %type <pnt> listaDeEventos
@@ -264,134 +264,134 @@ expressao:   string
 
 /*---------------------Operações Lógicas---------------------*/
 
-operadorLogico: AND
+operadorLogico: OP_AND
 { 
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = AND;
+	$$->token = OP_AND;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
 	$$->dir = NULL;
 }
-|OR
+|OP_OR
 { 
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = OR;
+	$$->token = OP_OR;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
 	$$->dir = NULL;
 }
 
-negacao: NOT '(' condicao ')'
+negacao: OP_NOT '(' condicao ')'
 { 
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = NOT;
+	$$->token = OP_NOT;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = $3;
 	$$->dir = NULL;
 }
 
-diferente: expressao NE expressao     
+diferente: expressao OP_NE expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = NE;
+	$$->token = OP_NE;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao NE expressao')' operadorLogico condicao     
+| '('expressao OP_NE expressao')' operadorLogico condicao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = NE;
+	$$->token = OP_NE;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
 	$$->prox2 = $7;
 }
 
-igual: expressao EQ expressao     
+igual: expressao OP_EQ expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = EQ;
+	$$->token = OP_EQ;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao EQ expressao')' operadorLogico condicao
+| '('expressao OP_EQ expressao')' operadorLogico condicao
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = EQ;
+	$$->token = OP_EQ;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
 	$$->prox2 = $7;
 }
 
-menor: expressao LT expressao     
+menor: expressao OP_LT expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = LT;
+	$$->token = OP_LT;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao LT expressao')' operadorLogico condicao
+| '('expressao OP_LT expressao')' operadorLogico condicao
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = LT;
+	$$->token = OP_LT;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
 	$$->prox2 = $7;
 }
 
-maior: expressao GT expressao     
+maior: expressao OP_GT expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = GT;
+	$$->token = OP_GT;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao GT expressao')' operadorLogico condicao
+| '('expressao OP_GT expressao')' operadorLogico condicao
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = GT;
+	$$->token = OP_GT;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
 	$$->prox2 = $7;
 }
 
-menorIgual: expressao LE expressao     
+menorIgual: expressao OP_LE expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = LE;
+	$$->token = OP_LE;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao LE expressao')' operadorLogico condicao
+| '('expressao OP_LE expressao')' operadorLogico condicao
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = LE;
+	$$->token = OP_LE;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
 	$$->prox2 = $7;
 }
 
-maiorIgual: expressao GE expressao     
+maiorIgual: expressao OP_GE expressao     
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = GE;
+	$$->token = OP_GE;
 	$$->esq = $1;
 	$$->dir = $3;
 	$$->prox1 = NULL;
 }
-| '('expressao GE expressao')' operadorLogico condicao 
+| '('expressao OP_GE expressao')' operadorLogico condicao 
 {
 	$$ = (No*)malloc(sizeof(No));
-	$$->token = GE;
+	$$->token = OP_GE;
 	$$->esq = $2;
 	$$->dir = $4;
 	$$->prox1 = $6;
@@ -466,13 +466,7 @@ comandoImprimir: OUT '('  string  ')'
 	$$->prox1 = $6;
 }
 
-comandoPulaLinha: PRINTLN
-{
-	$$ = (tipo*)malloc(sizeof(tipo));
-	$$->token = PRINTLN; 
-	$$->esq = NULL;
-	$$->dir = NULL;
-}
+
 
 comandoRecebe: IN '('string')'
 {
@@ -613,7 +607,7 @@ void cbr_para_c(tipo *raiz){
 			cbr_para_c(raiz->dir);
 			break;
 
-		case EQ:
+		case OP_EQ:
 		if(raiz->prox1==NULL){
 			cbr_para_c(raiz->esq);
 			fprintf(saida,"== ");
@@ -629,7 +623,7 @@ void cbr_para_c(tipo *raiz){
 			fprintf(saida,")");
 			break;
 		}
-		case NE:
+		case OP_NE:
 			if(raiz->prox1==NULL){
 				cbr_para_c(raiz->esq);
 				fprintf(saida,"!= ");
@@ -646,7 +640,7 @@ void cbr_para_c(tipo *raiz){
 				break;
 			}
 		
-		case GT:
+		case OP_GT:
 			if(raiz->prox1==NULL){
 				cbr_para_c(raiz->esq);
 				fprintf(saida,"> ");
@@ -662,7 +656,7 @@ void cbr_para_c(tipo *raiz){
 				fprintf(saida,")");
 				break;
 			}
-		case LT:
+		case OP_LT:
 			if(raiz->prox1==NULL){
 				cbr_para_c(raiz->esq);
 				fprintf(saida,"< ");
@@ -679,7 +673,7 @@ void cbr_para_c(tipo *raiz){
 				break;
 			}
 
-		case GE:
+		case OP_GE:
 			if(raiz->prox1==NULL){
 				cbr_para_c(raiz->esq);
 				fprintf(saida,">= ");
@@ -695,7 +689,7 @@ void cbr_para_c(tipo *raiz){
 				fprintf(saida,")");
 				break;
 			}
-		case LE:
+		case OP_LE:
 			if(raiz->prox1==NULL){
 				cbr_para_c(raiz->esq);
 				fprintf(saida,"<= ");
@@ -755,15 +749,15 @@ void cbr_para_c(tipo *raiz){
 			break;
 
 
-		case AND:
+		case OP_AND:
 			fprintf(saida,"&&");
 			break;
 
-		case OR:
+		case OP_OR:
 			fprintf(saida,"||");
 			break;
 
-		case NOT:
+		case OP_NOT:
 			fprintf(saida,"!");
 			fprintf(saida,"(");
 			cbr_para_c(raiz->esq);
@@ -785,16 +779,6 @@ void cbr_para_c(tipo *raiz){
 			break;
 
 
-		case PRINTLN:
-			fprintf(saida," \n printf");
-			fprintf(saida,"(");
-			fprintf(saida,"\"");
-			fprintf(saida,"\\n");
-			fprintf(saida,"\"");
-			fprintf(saida,")");
-			fprintf(saida,"; ");
-			fprintf(saida,"\n");
-			break;	
 
 		case OUT:
 			if(raiz->dir==NULL){
