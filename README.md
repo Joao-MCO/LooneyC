@@ -20,7 +20,7 @@ flex lexer.l
 g++ parser.tab.c lex.yy.c -o LooneyCompiler
 
 #Roda o teste
-LooneyCompiler teste.loc
-g++ teste.loc.c -o saida_teste
+LooneyCompiler "NOME DO ARQUIVO".loc
+g++ "NOME DO ARQUIVO".c -o saida_teste
 saida_teste
 ```
