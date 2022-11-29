@@ -12,10 +12,13 @@ Instale Flex e Bison em sua máquina, em seguida rode estes comandos pelo termin
 ```bash
 #compila o parser
 bison -d parser.y --debug
+
 #compila o lexer
 flex lexer.l
+
 #compila o lexer e o parser pelo compilador C
 g++ parser.tab.c lex.yy.c -o LooneyCompiler
+
 #Roda o teste
 LooneyCompiler teste.loc
 g++ teste.loc.cc -o saida_teste
