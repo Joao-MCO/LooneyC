@@ -53,29 +53,23 @@
 %type <pnt> chamaFn
 %type <pnt> letra
 %type <pnt> numero
-
 %type <pnt> atribuicao
-
 %type <pnt> expressao
 %type <pnt> comando
 %type <pnt> condicao
 %type <pnt> diferente
-
 %type <pnt> igual
 %type <pnt> menor
 %type <pnt> maior
 %type <pnt> menorIgual
 %type <pnt> maiorIgual
-
 %type <pnt> comandoSe
 %type <pnt> comandoImprimir
 %type <pnt> comandoRecebe
 %type <pnt> comandoLoop
-
 %type <pnt> operadorLogico
 %type <pnt> negacao
 %type <pnt> caractere
-%type <pnt> comandoPulaLinha
 %type <pnt> string
 %right '='
 %left  '-' '+' '/' '*'
@@ -263,6 +257,13 @@ expressao:   string
 
 
 /*---------------------Operações Lógicas---------------------*/
+condicao: igual
+| maior
+| menor
+| maiorIgual
+| menorIgual
+| diferente
+;
 
 operadorLogico: OP_AND
 { 
@@ -406,7 +407,6 @@ comando:  atribuicao
 | comandoSe
 | comandoImprimir
 | comandoRecebe
-| comandoPulaLinha
 ;
 
 comandoSe:  OP_IF '(' condicao ')' chamaFn
