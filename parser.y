@@ -29,29 +29,21 @@
 %token <pnt> OUT	
 %token <pnt> IN 
 %token <pnt> VAR 
-	
-
 %token <pnt> NUM 		
 %token <pnt> EVENT 
-		
-%token <pnt> OP_RELA
-%token <pnt> LE			
-%token <pnt> GE			
-%token <pnt> EQ			
-%token <pnt> NE			
-%token <pnt> LT			
-%token <pnt> GT	
-		
-%token <pnt> AND		
-%token <pnt> OR			
-%token <pnt> NOT
-
+%token <pnt> OP_LE			
+%token <pnt> OP_GE			
+%token <pnt> OP_EQ			
+%token <pnt> OP_NE			
+%token <pnt> OP_LT			
+%token <pnt> OP_GT	
+%token <pnt> OP_AND		
+%token <pnt> OP_OR			
+%token <pnt> OP_NOT
 %token <pnt> ATRIB
-
 %token <pnt> V_INT		
 %token <pnt> V_REAL		
 %token <pnt> V_CHAR
-	
 %token <pnt> INICIOMAIN		
 %token <pnt> ENDMAIN		
 %token <pnt> PRINTLN 	
@@ -272,17 +264,9 @@ expressao:   string
 
 /*---------------------Operações Lógicas---------------------*/
 
-condicao: igual
-| maior
-| menor
-| maiorIgual
-| menorIgual
-| diferente
-;
-
 operadorLogico: AND
 { 
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = AND;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
@@ -290,7 +274,7 @@ operadorLogico: AND
 }
 |OR
 { 
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = OR;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
@@ -299,7 +283,7 @@ operadorLogico: AND
 
 negacao: NOT '(' condicao ')'
 { 
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = NOT;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = $3;
@@ -308,7 +292,7 @@ negacao: NOT '(' condicao ')'
 
 diferente: expressao NE expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = NE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -316,7 +300,7 @@ diferente: expressao NE expressao
 }
 | '('expressao NE expressao')' operadorLogico condicao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = NE;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -326,7 +310,7 @@ diferente: expressao NE expressao
 
 igual: expressao EQ expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = EQ;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -334,7 +318,7 @@ igual: expressao EQ expressao
 }
 | '('expressao EQ expressao')' operadorLogico condicao
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = EQ;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -344,7 +328,7 @@ igual: expressao EQ expressao
 
 menor: expressao LT expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = LT;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -352,7 +336,7 @@ menor: expressao LT expressao
 }
 | '('expressao LT expressao')' operadorLogico condicao
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = LT;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -362,7 +346,7 @@ menor: expressao LT expressao
 
 maior: expressao GT expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = GT;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -370,7 +354,7 @@ maior: expressao GT expressao
 }
 | '('expressao GT expressao')' operadorLogico condicao
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = GT;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -380,7 +364,7 @@ maior: expressao GT expressao
 
 menorIgual: expressao LE expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = LE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -388,7 +372,7 @@ menorIgual: expressao LE expressao
 }
 | '('expressao LE expressao')' operadorLogico condicao
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = LE;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -398,7 +382,7 @@ menorIgual: expressao LE expressao
 
 maiorIgual: expressao GE expressao     
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = GE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -406,7 +390,7 @@ maiorIgual: expressao GE expressao
 }
 | '('expressao GE expressao')' operadorLogico condicao 
 {
-	$$ = (tipo*)malloc(sizeof(tipo));
+	$$ = (No*)malloc(sizeof(No));
 	$$->token = GE;
 	$$->esq = $2;
 	$$->dir = $4;

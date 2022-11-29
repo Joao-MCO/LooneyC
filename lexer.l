@@ -2,6 +2,8 @@
     #include<string.h>
     #include<stdio.h>
     #include<stdlib.h>
+	#include"tipo.h"
+	#include"parser.tab.h"
 
 %}
 
@@ -29,8 +31,15 @@
 ")"                 {return R_PAR;}
 "{"                 {return S_BLOCK;}
 "}"                 {return E_BLOCK;}
-"=="|"<="|">="|"!="|">"|"<" {return OP_RELA;} 
-"&"|"|"|"!"         {return OP_LOGI;}
+"<="                {return OP_LE;}
+">="                {return OP_GE;}
+"=="                {return OP_EQ;}
+"!="                {return OP_NE;}
+">"	                {return OP_GT;}
+"<"	                {return OP_LT;}
+"&"                 {return OP_AND;}
+"|"                 {return OP_OR;}
+"!"                 {return OP_NOT;}
 
 [-+]?[0-9]+("."[0-9]*)? { 
   yylval.pnt->val = atof(yytext);
