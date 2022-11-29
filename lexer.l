@@ -1,7 +1,8 @@
 %{
+    #include<string.h>
     #include<stdio.h>
     #include<stdlib.h>
-    #include
+
 %}
 
 %%
@@ -31,11 +32,10 @@
 "=="|"<="|">="|"!="|">"|"<" {return OP_RELA;} 
 "&"|"|"|"!"         {return OP_LOGI;}
 
-[-+]?[0-9]+("."[0-9]*)?{ 
+[-+]?[0-9]+("."[0-9]*)? { 
   yylval.pnt->val = atof(yytext);
   return NUM;
 }
-
 [a-zA-Z][a-zA-z0-9]* { 
   strncpy(yylval.pnt->nome, yytext, 256);
   return VAR;
@@ -47,5 +47,5 @@
 
 %%
 int yywrap(void){
-    retunr 1;
+    return 1;
 }
