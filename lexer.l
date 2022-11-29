@@ -4,6 +4,7 @@
     #include<stdlib.h>
 	  #include"tipo.h"
 	  #include"parser.tab.h"
+    #define YY_DECL extern "C" int yylex()
 
 %}
 

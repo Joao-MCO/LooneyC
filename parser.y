@@ -3,12 +3,9 @@
 	#include <math.h> 
 	#include <stdlib.h>
 	#include <string.h>
-	#include <cstdio>
-	#include <iostream>
 	#include "tipo.h"
-	using namespace std;
 	#define YYERROR_VERBOSE
-	extern "C" int yylex();
+	extern "C" int yylex(void);
 	extern "C" int yyparse();
 	extern "C" FILE *yyin;
 	void yyerror(const char *s);
