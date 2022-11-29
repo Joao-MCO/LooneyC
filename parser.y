@@ -9,7 +9,7 @@
 	using namespace std;
 	#define YYERROR_VERBOSE
 	extern "C" int yylex();
-	extern "C" i21:03 28/11/2022nt yyparse();
+	extern "C" int yyparse();
 	extern "C" FILE *yyin;
 	void yyerror(const char *s);
 	void cbr_para_c(tipo *raiz);
@@ -22,8 +22,7 @@
 %union{
 	tipo *pnt;
 }
-
-%token <pnt> LOOP		
+		
 %token <pnt> OP_IF 		
 %token <pnt> OP_ELSE 		
 %token <pnt> OUT	
