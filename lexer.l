@@ -2,15 +2,14 @@
     #include<string.h>
     #include<stdio.h>
     #include<stdlib.h>
-	#include"tipo.h"
-	#include"parser.tab.h"
+	  #include"tipo.h"
+	  #include"parser.tab.h"
 
 %}
 
 %%
 "qqhavelinho"       {return INICIOMAIN;}
 "issoetudopessoal"  {return ENDMAIN;}
-"/f"                {return FIMLINHA;}
 "inteiro"           {return V_INT;}
 "char"              {return V_CHAR;}
 "real"              {return V_REAL;}
@@ -20,17 +19,6 @@
 "senananao"         {return OP_ELSE;}
 "looolooloop"       {return LOOP;}
 "="                 {return ATRIB;}
-"+"                 {return OP_SOMA;}
-"-"                 {return OP_SUB;}
-"*"                 {return OP_MULTI;}
-"/"                 {return OP_DIV;}
-"%"                 {return MOD;}
-"."                 {return PONTO;}
-";"                 {return PEV;}
-"("                 {return L_PAR;}
-")"                 {return R_PAR;}
-"{"                 {return S_BLOCK;}
-"}"                 {return E_BLOCK;}
 "<="                {return OP_LE;}
 ">="                {return OP_GE;}
 "=="                {return OP_EQ;}
