@@ -267,7 +267,7 @@ condicao: igual
 
 operadorLogico: OP_AND
 { 
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_AND;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
@@ -275,7 +275,7 @@ operadorLogico: OP_AND
 }
 |OP_OR
 { 
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_OR;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = NULL;
@@ -284,7 +284,7 @@ operadorLogico: OP_AND
 
 negacao: OP_NOT '(' condicao ')'
 { 
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_NOT;
 	strcpy($$->nome, yylval.pnt->nome);
 	$$->esq = $3;
@@ -293,7 +293,7 @@ negacao: OP_NOT '(' condicao ')'
 
 diferente: expressao OP_NE expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_NE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -301,7 +301,7 @@ diferente: expressao OP_NE expressao
 }
 | '('expressao OP_NE expressao')' operadorLogico condicao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_NE;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -311,7 +311,7 @@ diferente: expressao OP_NE expressao
 
 igual: expressao OP_EQ expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_EQ;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -319,7 +319,7 @@ igual: expressao OP_EQ expressao
 }
 | '('expressao OP_EQ expressao')' operadorLogico condicao
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_EQ;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -329,7 +329,7 @@ igual: expressao OP_EQ expressao
 
 menor: expressao OP_LT expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_LT;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -337,7 +337,7 @@ menor: expressao OP_LT expressao
 }
 | '('expressao OP_LT expressao')' operadorLogico condicao
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_LT;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -347,7 +347,7 @@ menor: expressao OP_LT expressao
 
 maior: expressao OP_GT expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_GT;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -355,7 +355,7 @@ maior: expressao OP_GT expressao
 }
 | '('expressao OP_GT expressao')' operadorLogico condicao
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_GT;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -365,7 +365,7 @@ maior: expressao OP_GT expressao
 
 menorIgual: expressao OP_LE expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_LE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -373,7 +373,7 @@ menorIgual: expressao OP_LE expressao
 }
 | '('expressao OP_LE expressao')' operadorLogico condicao
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_LE;
 	$$->esq = $2;
 	$$->dir = $4;
@@ -383,7 +383,7 @@ menorIgual: expressao OP_LE expressao
 
 maiorIgual: expressao OP_GE expressao     
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_GE;
 	$$->esq = $1;
 	$$->dir = $3;
@@ -391,7 +391,7 @@ maiorIgual: expressao OP_GE expressao
 }
 | '('expressao OP_GE expressao')' operadorLogico condicao 
 {
-	$$ = (No*)malloc(sizeof(No));
+	$$ = (tipo*)malloc(sizeof(tipo));
 	$$->token = OP_GE;
 	$$->esq = $2;
 	$$->dir = $4;
