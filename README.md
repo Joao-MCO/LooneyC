@@ -21,6 +21,6 @@ g++ parser.tab.c lex.yy.c -o LooneyCompiler
 
 #Roda o teste
 LooneyCompiler teste.loc
-g++ teste.loc.cc -o saida_teste
+g++ teste.loc.c -o saida_teste
 saida_teste
 ```
