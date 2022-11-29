@@ -22,7 +22,8 @@
 %union{
 	tipo *pnt;
 }
-		
+
+%token <pnt> LOOP		
 %token <pnt> OP_IF 		
 %token <pnt> OP_ELSE 		
 %token <pnt> OUT	
@@ -46,7 +47,6 @@
 %token <pnt> NOT
 
 %token <pnt> ATRIB
-%token <pnt> LOOP
 
 %token <pnt> V_INT		
 %token <pnt> V_REAL		
@@ -419,7 +419,6 @@ maiorIgual: expressao GE expressao
 comando:  atribuicao
 | chamaFn
 | comandoLoop
-| comandoPara
 | comandoSe
 | comandoImprimir
 | comandoRecebe
